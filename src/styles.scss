@@ -1,0 +1,221 @@
+/* Paleta sobria y minimalista: Plomo, Negro, Gris con Azul Institucional para resaltar */
+:root {
+  --color-negro: #0f172a;        /* Negro carbón / Plomo muy oscuro */
+  --color-plomo-oscuro: #1e293b; /* Plomo oscuro para encabezados */
+  --color-plomo-medio: #334155;  /* Plomo para textos */
+  --color-gris-texto: #64748b;   /* Gris neutro para subtítulos y etiquetas */
+  --color-gris-borde: #e2e8f0;   /* Gris claro para bordes */
+  --color-gris-fondo: #f8fafc;   /* Gris muy tenue para fondos */
+  --color-blanco: #ffffff;
+
+  /* Color vivo para resaltar (usado en un 10% para botones y acentos) */
+  --color-resalte: #1d4ed8;       /* Azul sobrio / cobalto */
+  --color-resalte-hover: #1e40af;
+  --color-resalte-suave: #eff6ff;
+}
+
+body {
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--color-gris-fondo);
+  color: var(--color-plomo-medio);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Tarjetas sobrias: bordes limpios, sin gradientes chillones */
+.card-pet {
+  background: var(--color-blanco);
+  border: 1px solid var(--color-gris-borde);
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+
+  .card-header-pet {
+    background-color: var(--color-plomo-oscuro);
+    color: #ffffff;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--color-gris-borde);
+  }
+}
+
+/* Botón de acción con color de resalte */
+.btn-pet-primary {
+  background-color: var(--color-resalte);
+  border-color: var(--color-resalte);
+  color: #ffffff;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  padding: 0.55rem 1.25rem;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+
+  &:hover, &:focus {
+    background-color: var(--color-resalte-hover);
+    border-color: var(--color-resalte-hover);
+    color: #ffffff;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+/* Botón secundario en plomo/gris */
+.btn-pet-secondary {
+  background-color: #475569;
+  border-color: #475569;
+  color: #ffffff;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  padding: 0.55rem 1.25rem;
+
+  &:hover {
+    background-color: #334155;
+    border-color: #334155;
+    color: #ffffff;
+  }
+}
+
+/* Badges sobrios en tonos grisáceos con texto oscuro */
+.badge-pet {
+  padding: 0.35rem 0.65rem;
+  font-weight: 600;
+  border-radius: 0.375rem;
+  font-size: 0.78rem;
+  border: 1px solid transparent;
+
+  &.badge-disponible {
+    background-color: #ecfdf5;
+    color: #065f46;
+    border-color: #a7f3d0;
+  }
+  &.badge-en-adopcion {
+    background-color: #fffbeb;
+    color: #92400e;
+    border-color: #fde68a;
+  }
+  &.badge-adoptado {
+    background-color: #eff6ff;
+    color: #1e40af;
+    border-color: #bfdbfe;
+  }
+  &.badge-pendiente {
+    background-color: #fffbeb;
+    color: #92400e;
+    border-color: #fde68a;
+  }
+  &.badge-aprobada {
+    background-color: #ecfdf5;
+    color: #065f46;
+    border-color: #a7f3d0;
+  }
+  &.badge-rechazada {
+    background-color: #fef2f2;
+    color: #991b1b;
+    border-color: #fecaca;
+  }
+}
+
+/* Formularios limpios y claros */
+.form-label {
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--color-plomo-oscuro);
+  margin-bottom: 0.35rem;
+}
+
+.form-control, .form-select {
+  border-radius: 0.5rem;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid #cbd5e1;
+  font-size: 0.92rem;
+  color: var(--color-plomo-oscuro);
+
+  &:focus {
+    border-color: var(--color-resalte);
+    box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.12);
+  }
+
+  &.ng-touched.ng-invalid {
+    border-color: #dc2626;
+  }
+
+  &.ng-touched.ng-valid {
+    border-color: #16a34a;
+  }
+}
+
+.error-feedback {
+  color: #b91c1c;
+  font-size: 0.8rem;
+  margin-top: 0.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-weight: 500;
+}
+
+/* Tablas con fondo sobrio y bordes sutiles */
+.table-pet {
+  th {
+    background-color: #f1f5f9;
+    color: #334155;
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 0.75rem 0.9rem;
+    border-bottom: 1px solid var(--color-gris-borde);
+  }
+
+  td {
+    padding: 0.8rem 0.9rem;
+    vertical-align: middle;
+    font-size: 0.9rem;
+    border-bottom: 1px solid #f1f5f9;
+    color: var(--color-plomo-medio);
+  }
+
+  tbody tr:hover {
+    background-color: #f8fafc;
+  }
+}
+
+/* Tarjetas de estadísticas sobrias en escala de gris con acento */
+.stat-card {
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  background: #ffffff;
+  border: 1px solid var(--color-gris-borde);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  .stat-icon {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    background-color: #f1f5f9;
+    color: var(--color-plomo-oscuro);
+  }
+
+  .stat-val {
+    font-size: 1.75rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--color-negro);
+  }
+
+  .stat-lbl {
+    font-size: 0.8rem;
+    color: var(--color-gris-texto);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+}

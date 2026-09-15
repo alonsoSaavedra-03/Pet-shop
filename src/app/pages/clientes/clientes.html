@@ -1,0 +1,314 @@
+<div class="container py-4">
+  <!-- Encabezado directo sin etiquetas ni subtítulos detrás -->
+  <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-2 border-bottom">
+    <div>
+      <h2 class="fw-bold text-dark mb-1">Registro de Clientes</h2>
+      <p class="text-secondary small mb-0">
+        Captura de datos del propietario o solicitante con validaciones de formato (DNI, teléfono, email).
+      </p>
+    </div>
+    <div class="mt-2 mt-md-0">
+      <span class="badge bg-light text-secondary border px-3 py-2">
+        Total clientes: <strong>{{ clientes().length }}</strong>
+      </span>
+    </div>
+  </div>
+
+  <!-- Alerta de éxito sobria -->
+  @if (mensajeExito) {
+    <div class="alert alert-secondary border-secondary d-flex align-items-center justify-content-between p-3 mb-4 rounded-2" role="alert">
+      <div class="d-flex align-items-center gap-2 text-dark">
+        <i class="bi bi-check2-circle fs-5 text-success"></i>
+        <span>{{ mensajeExito }}</span>
+      </div>
+      <button type="button" class="btn-close btn-sm" (click)="mensajeExito = null" aria-label="Close"></button>
+    </div>
+  }
+
+  <div class="row g-4">
+    <!-- Formulario 02: Registro de Clientes -->
+    <div class="col-lg-5">
+      <div class="card card-pet">
+        <div class="card-header-pet">
+          <h5 class="fw-bold mb-0 text-white">Datos del Cliente</h5>
+        </div>
+
+        <div class="card-body p-4">
+          <form #clienteForm="ngForm" (ngSubmit)="onSubmit(clienteForm)" novalidate>
+            
+            <!-- Campo 1: Nombres -->
+            <div class="mb-3">
+              <label for="nombres" class="form-label">
+                Nombres <span class="text-danger">*</span>
+              </label>
+              <input
+                type="text"
+                id="nombres"
+                name="nombres"
+                class="form-control"
+                [(ngModel)]="nuevoCliente.nombres"
+                #nombresModel="ngModel"
+                required
+                minlength="3"
+                pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$"
+                placeholder="Ej. Carlos Alberto"
+              />
+              @if (nombresModel.invalid && (nombresModel.touched || clienteForm.submitted)) {
+                <div class="error-feedback">
+                  @if (nombresModel.errors?.['required']) {
+                    <i class="bi bi-exclamation-circle"></i> Los nombres son obligatorios.
+                  }
+                  @if (nombresModel.errors?.['minlength']) {
+                    <i class="bi bi-exclamation-circle"></i> Ingrese al menos 3 caracteres.
+                  }
+                  @if (nombresModel.errors?.['pattern']) {
+                    <i class="bi bi-exclamation-circle"></i> Solo ingrese letras y espacios.
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- Campo 2: Apellidos -->
+            <div class="mb-3">
+              <label for="apellidos" class="form-label">
+                Apellidos <span class="text-danger">*</span>
+              </label>
+              <input
+                type="text"
+                id="apellidos"
+                name="apellidos"
+                class="form-control"
+                [(ngModel)]="nuevoCliente.apellidos"
+                #apellidosModel="ngModel"
+                required
+                minlength="3"
+                pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$"
+                placeholder="Ej. Mendoza Ruiz"
+              />
+              @if (apellidosModel.invalid && (apellidosModel.touched || clienteForm.submitted)) {
+                <div class="error-feedback">
+                  @if (apellidosModel.errors?.['required']) {
+                    <i class="bi bi-exclamation-circle"></i> Los apellidos son obligatorios.
+                  }
+                  @if (apellidosModel.errors?.['minlength']) {
+                    <i class="bi bi-exclamation-circle"></i> Ingrese al menos 3 caracteres.
+                  }
+                  @if (apellidosModel.errors?.['pattern']) {
+                    <i class="bi bi-exclamation-circle"></i> Solo ingrese letras y espacios.
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- DNI y Teléfono -->
+            <div class="row g-2 mb-3">
+              <!-- DNI -->
+              <div class="col-sm-6">
+                <label for="dni" class="form-label">
+                  DNI (8 dígitos) <span class="text-danger">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="dni"
+                  name="dni"
+                  maxlength="8"
+                  class="form-control"
+                  [(ngModel)]="nuevoCliente.dni"
+                  #dniModel="ngModel"
+                  required
+                  pattern="^[0-9]{8}$"
+                  placeholder="74829103"
+                />
+                @if (dniModel.invalid && (dniModel.touched || clienteForm.submitted)) {
+                  <div class="error-feedback">
+                    @if (dniModel.errors?.['required']) {
+                      <i class="bi bi-exclamation-circle"></i> DNI requerido.
+                    }
+                    @if (dniModel.errors?.['pattern']) {
+                      <i class="bi bi-exclamation-circle"></i> Exactamente 8 dígitos.
+                    }
+                  </div>
+                }
+              </div>
+
+              <!-- Teléfono -->
+              <div class="col-sm-6">
+                <label for="telefono" class="form-label">
+                  Teléfono (9 dígitos) <span class="text-danger">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="telefono"
+                  name="telefono"
+                  maxlength="9"
+                  class="form-control"
+                  [(ngModel)]="nuevoCliente.telefono"
+                  #telefonoModel="ngModel"
+                  required
+                  pattern="^[0-9]{9}$"
+                  placeholder="987654321"
+                />
+                @if (telefonoModel.invalid && (telefonoModel.touched || clienteForm.submitted)) {
+                  <div class="error-feedback">
+                    @if (telefonoModel.errors?.['required']) {
+                      <i class="bi bi-exclamation-circle"></i> Teléfono requerido.
+                    }
+                    @if (telefonoModel.errors?.['pattern']) {
+                      <i class="bi bi-exclamation-circle"></i> Exactamente 9 dígitos.
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Correo Electrónico -->
+            <div class="mb-3">
+              <label for="email" class="form-label">
+                Correo Electrónico <span class="text-danger">*</span>
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="form-control"
+                [(ngModel)]="nuevoCliente.email"
+                #emailModel="ngModel"
+                required
+                email
+                placeholder="ejemplo@correo.com"
+              />
+              @if (emailModel.invalid && (emailModel.touched || clienteForm.submitted)) {
+                <div class="error-feedback">
+                  @if (emailModel.errors?.['required']) {
+                    <i class="bi bi-exclamation-circle"></i> El correo es obligatorio.
+                  }
+                  @if (emailModel.errors?.['email']) {
+                    <i class="bi bi-exclamation-circle"></i> Formato de correo no válido.
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- Dirección -->
+            <div class="mb-4">
+              <label for="direccion" class="form-label">
+                Dirección <span class="text-danger">*</span>
+              </label>
+              <input
+                type="text"
+                id="direccion"
+                name="direccion"
+                class="form-control"
+                [(ngModel)]="nuevoCliente.direccion"
+                #direccionModel="ngModel"
+                required
+                minlength="5"
+                placeholder="Av. Las Palmeras 450, Distrito"
+              />
+              @if (direccionModel.invalid && (direccionModel.touched || clienteForm.submitted)) {
+                <div class="error-feedback">
+                  @if (direccionModel.errors?.['required']) {
+                    <i class="bi bi-exclamation-circle"></i> La dirección es obligatoria.
+                  }
+                  @if (direccionModel.errors?.['minlength']) {
+                    <i class="bi bi-exclamation-circle"></i> Ingrese al menos 5 caracteres.
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="d-grid gap-2">
+              <button
+                type="submit"
+                class="btn btn-pet-primary"
+                [disabled]="clienteForm.invalid && clienteForm.submitted"
+              >
+                Registrar Cliente
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-secondary btn-sm"
+                (click)="clienteForm.resetForm()"
+              >
+                Limpiar campos
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Directorio de Clientes Registrados -->
+    <div class="col-lg-7">
+      <div class="card card-pet h-100">
+        <div class="card-body p-4">
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+            <h5 class="fw-bold mb-0 text-dark">Directorio de Clientes</h5>
+            <span class="badge bg-light text-secondary border">{{ clientesFiltrados.length }} registro(s)</span>
+          </div>
+
+          <div class="mb-3">
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              placeholder="Buscar por nombre, apellido, DNI o email..."
+              [(ngModel)]="busqueda"
+            />
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-pet align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Cliente</th>
+                  <th>DNI</th>
+                  <th>Contacto</th>
+                  <th>Dirección</th>
+                  <th class="text-end">Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (c of clientesFiltrados; track c.id) {
+                  <tr>
+                    <td>
+                      <span class="text-secondary small fw-bold">{{ c.id }}</span>
+                    </td>
+                    <td>
+                      <div class="fw-bold text-dark">{{ c.nombres }} {{ c.apellidos }}</div>
+                      <small class="text-muted">{{ c.fechaRegistro }}</small>
+                    </td>
+                    <td>
+                      <span class="text-secondary">{{ c.dni }}</span>
+                    </td>
+                    <td>
+                      <div class="small text-dark">{{ c.telefono }}</div>
+                      <small class="text-muted">{{ c.email }}</small>
+                    </td>
+                    <td>
+                      <small class="text-secondary text-truncate d-inline-block" style="max-width: 140px;" title="{{ c.direccion }}">
+                        {{ c.direccion }}
+                      </small>
+                    </td>
+                    <td class="text-end">
+                      <button class="btn btn-outline-danger btn-sm" (click)="eliminar(c.id, c.nombres + ' ' + c.apellidos)" title="Eliminar cliente">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                } @empty {
+                  <tr>
+                    <td colspan="6" class="text-center py-4 text-muted small">
+                      No se encontraron clientes registrados.
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

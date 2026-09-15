@@ -1,0 +1,291 @@
+<div class="container py-4">
+  <!-- Encabezado directo sin subtítulos detrás -->
+  <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-2 border-bottom">
+    <div>
+      <h2 class="fw-bold text-dark mb-1">Solicitudes de Adopción</h2>
+      <p class="text-secondary small mb-0">
+        Implementado con <strong>Reactive Forms</strong> (<code>FormGroup</code>, <code>FormBuilder</code> y <code>Validators</code>).
+      </p>
+    </div>
+    <div class="mt-2 mt-md-0">
+      <span class="badge bg-light text-secondary border px-3 py-2">
+        Total solicitudes: <strong>{{ adopciones().length }}</strong>
+      </span>
+    </div>
+  </div>
+
+  <!-- Alerta de éxito sobria -->
+  @if (mensajeExito) {
+    <div class="alert alert-secondary border-secondary d-flex align-items-center justify-content-between p-3 mb-4 rounded-2" role="alert">
+      <div class="d-flex align-items-center gap-2 text-dark">
+        <i class="bi bi-check2-circle fs-5 text-success"></i>
+        <span>{{ mensajeExito }}</span>
+      </div>
+      <button type="button" class="btn-close btn-sm" (click)="mensajeExito = null" aria-label="Close"></button>
+    </div>
+  }
+
+  <div class="row g-4">
+    <!-- Formulario 03: Reactive Forms -->
+    <div class="col-lg-5">
+      <div class="card card-pet">
+        <div class="card-header-pet">
+          <h5 class="fw-bold mb-0 text-white">Nueva Solicitud de Adopción</h5>
+        </div>
+
+        <div class="card-body p-4">
+          <form [formGroup]="adopcionForm" (ngSubmit)="onSubmit()" novalidate>
+            
+            <!-- Campo 1: Cliente solicitante -->
+            <div class="mb-3">
+              <label for="clienteId" class="form-label">
+                Cliente Solicitante <span class="text-danger">*</span>
+              </label>
+              <select
+                id="clienteId"
+                formControlName="clienteId"
+                class="form-select"
+                [class.is-invalid]="isInvalid('clienteId')"
+              >
+                <option value="" disabled>Seleccione un cliente registrado...</option>
+                @for (c of clientes(); track c.id) {
+                  <option [value]="c.id">{{ c.nombres }} {{ c.apellidos }} (DNI: {{ c.dni }})</option>
+                }
+              </select>
+              @if (isInvalid('clienteId') && getError('clienteId', 'required')) {
+                <div class="error-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Debe seleccionar el cliente solicitante.
+                </div>
+              }
+            </div>
+
+            <!-- Campo 2: Mascota a adoptar -->
+            <div class="mb-3">
+              <label for="mascotaId" class="form-label">
+                Mascota a Adoptar <span class="text-danger">*</span>
+              </label>
+              <select
+                id="mascotaId"
+                formControlName="mascotaId"
+                class="form-select"
+                [class.is-invalid]="isInvalid('mascotaId')"
+              >
+                <option value="" disabled>Seleccione la mascota...</option>
+                @for (m of mascotas(); track m.id) {
+                  <option [value]="m.id">
+                    {{ m.nombre }} - {{ m.especie }} ({{ m.raza }}) · [{{ m.estado }}]
+                  </option>
+                }
+              </select>
+              @if (isInvalid('mascotaId') && getError('mascotaId', 'required')) {
+                <div class="error-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Debe seleccionar la mascota.
+                </div>
+              }
+            </div>
+
+            <!-- Campo 3: Fecha de Solicitud -->
+            <div class="mb-3">
+              <label for="fechaSolicitud" class="form-label">
+                Fecha de Solicitud <span class="text-danger">*</span>
+              </label>
+              <input
+                type="date"
+                id="fechaSolicitud"
+                formControlName="fechaSolicitud"
+                class="form-control"
+                [class.is-invalid]="isInvalid('fechaSolicitud')"
+              />
+              @if (isInvalid('fechaSolicitud') && getError('fechaSolicitud', 'required')) {
+                <div class="error-feedback">
+                  <i class="bi bi-exclamation-circle"></i> La fecha de solicitud es obligatoria.
+                </div>
+              }
+            </div>
+
+            <!-- Campo 4: Tipo de Vivienda -->
+            <div class="mb-3">
+              <label for="tipoVivienda" class="form-label">
+                Tipo de Vivienda <span class="text-danger">*</span>
+              </label>
+              <select
+                id="tipoVivienda"
+                formControlName="tipoVivienda"
+                class="form-select"
+                [class.is-invalid]="isInvalid('tipoVivienda')"
+              >
+                <option value="" disabled>Seleccione el tipo de vivienda...</option>
+                @for (tv of tiposVivienda; track tv) {
+                  <option [value]="tv">{{ tv }}</option>
+                }
+              </select>
+              @if (isInvalid('tipoVivienda') && getError('tipoVivienda', 'required')) {
+                <div class="error-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Debe indicar el tipo de vivienda.
+                </div>
+              }
+            </div>
+
+            <!-- Campo 5: Correo de Contacto -->
+            <div class="mb-3">
+              <label for="email" class="form-label">
+                Correo Electrónico de Contacto <span class="text-danger">*</span>
+              </label>
+              <input
+                type="email"
+                id="email"
+                formControlName="email"
+                class="form-control"
+                [class.is-invalid]="isInvalid('email')"
+                placeholder="adoptante@correo.com"
+              />
+              @if (isInvalid('email')) {
+                <div class="error-feedback">
+                  @if (getError('email', 'required')) {
+                    <i class="bi bi-exclamation-circle"></i> El correo electrónico es requerido.
+                  }
+                  @if (getError('email', 'email')) {
+                    <i class="bi bi-exclamation-circle"></i> Ingrese un correo válido.
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- Campo 6: Motivo de Adopción (min 10) -->
+            <div class="mb-3">
+              <label for="motivoAdopcion" class="form-label">
+                Motivo de Adopción <span class="text-danger">*</span>
+              </label>
+              <textarea
+                id="motivoAdopcion"
+                formControlName="motivoAdopcion"
+                rows="3"
+                class="form-control"
+                [class.is-invalid]="isInvalid('motivoAdopcion')"
+                placeholder="Describa el motivo y compromiso (mín. 10 caracteres)..."
+              ></textarea>
+              @if (isInvalid('motivoAdopcion')) {
+                <div class="error-feedback">
+                  @if (getError('motivoAdopcion', 'required')) {
+                    <i class="bi bi-exclamation-circle"></i> El motivo de adopción es obligatorio.
+                  }
+                  @if (getError('motivoAdopcion', 'minlength')) {
+                    <i class="bi bi-exclamation-circle"></i> Debe ingresar al menos 10 caracteres descriptivos.
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- Campo 7: Observaciones -->
+            <div class="mb-4">
+              <label for="observaciones" class="form-label">Observaciones</label>
+              <textarea
+                id="observaciones"
+                formControlName="observaciones"
+                rows="2"
+                class="form-control"
+                placeholder="Mallas en ventanas, patio, experiencia previa, etc."
+              ></textarea>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="d-grid gap-2">
+              <button
+                type="submit"
+                class="btn btn-pet-primary"
+                [disabled]="adopcionForm.invalid && adopcionForm.touched"
+              >
+                Enviar Solicitud
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista de Solicitudes de Adopción Registradas -->
+    <div class="col-lg-7">
+      <div class="card card-pet h-100">
+        <div class="card-body p-4">
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+            <h5 class="fw-bold mb-0 text-dark">Solicitudes Registradas</h5>
+            <div>
+              <select class="form-select form-select-sm" [(ngModel)]="filtroEstado" style="width: auto;">
+                <option value="TODAS">Todos los estados</option>
+                <option value="Pendiente">Pendiente</option>
+                <option value="Aprobada">Aprobada</option>
+                <option value="Rechazada">Rechazada</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-pet align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Solicitante</th>
+                  <th>Mascota</th>
+                  <th>Vivienda</th>
+                  <th>Estado</th>
+                  <th class="text-end">Gestión</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (a of adopcionesFiltradas; track a.id) {
+                  <tr>
+                    <td>
+                      <span class="text-secondary small fw-bold">{{ a.id }}</span>
+                      <div class="small text-muted">{{ a.fechaSolicitud }}</div>
+                    </td>
+                    <td>
+                      <div class="fw-bold text-dark">{{ a.clienteNombre }}</div>
+                      <small class="text-muted">{{ a.email }}</small>
+                    </td>
+                    <td>
+                      <div class="text-dark">{{ a.mascotaNombre }}</div>
+                      <small class="text-muted text-truncate d-inline-block" style="max-width: 140px;" title="{{ a.motivoAdopcion }}">
+                        "{{ a.motivoAdopcion }}"
+                      </small>
+                    </td>
+                    <td>
+                      <span class="text-secondary small">{{ a.tipoVivienda }}</span>
+                    </td>
+                    <td>
+                      <span class="badge badge-pet" [ngClass]="{
+                        'badge-pendiente': a.estado === 'Pendiente',
+                        'badge-aprobada': a.estado === 'Aprobada',
+                        'badge-rechazada': a.estado === 'Rechazada'
+                      }">{{ a.estado }}</span>
+                    </td>
+                    <td class="text-end">
+                      <div class="btn-group btn-group-sm">
+                        @if (a.estado === 'Pendiente') {
+                          <button class="btn btn-outline-success btn-sm" (click)="cambiarEstado(a.id, 'Aprobada')" title="Aprobar Solicitud">
+                            <i class="bi bi-check"></i>
+                          </button>
+                          <button class="btn btn-outline-secondary btn-sm" (click)="cambiarEstado(a.id, 'Rechazada')" title="Rechazar Solicitud">
+                            <i class="bi bi-x"></i>
+                          </button>
+                        }
+                        <button class="btn btn-outline-danger btn-sm" (click)="eliminar(a.id)" title="Eliminar registro">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                } @empty {
+                  <tr>
+                    <td colspan="6" class="text-center py-4 text-muted small">
+                      No hay solicitudes registradas con el filtro seleccionado.
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

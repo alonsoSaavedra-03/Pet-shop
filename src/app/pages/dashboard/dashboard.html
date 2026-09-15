@@ -1,0 +1,237 @@
+<div class="container py-4">
+  <!-- Encabezado directo sin subtítulos detrás -->
+  <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-2 border-bottom">
+    <div>
+      <h2 class="fw-bold text-dark mb-1">Dashboard de Indicadores</h2>
+      <p class="text-secondary small mb-0">
+        Información consolidada de mascotas registradas, clientes y avance de solicitudes de adopción.
+      </p>
+    </div>
+    <div class="d-flex gap-2 mt-2 mt-md-0">
+      <button class="btn btn-outline-secondary btn-sm" (click)="reiniciarDatos()">
+        Restaurar datos demo
+      </button>
+      <a routerLink="/adopciones" class="btn btn-pet-primary btn-sm">
+        Nueva Solicitud
+      </a>
+    </div>
+  </div>
+
+  <!-- Tarjetas de KPIs (Plomo / Negro / Gris con acento azul) -->
+  <div class="row g-3 mb-4">
+    <!-- Total Mascotas -->
+    <div class="col-sm-6 col-xl-3">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="bi bi-heart-pulse"></i>
+        </div>
+        <div>
+          <div class="stat-val">{{ kpis().totalMascotas }}</div>
+          <div class="stat-lbl">Mascotas</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Total Clientes -->
+    <div class="col-sm-6 col-xl-3">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="bi bi-people"></i>
+        </div>
+        <div>
+          <div class="stat-val">{{ kpis().totalClientes }}</div>
+          <div class="stat-lbl">Clientes</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Solicitudes Totales -->
+    <div class="col-sm-6 col-xl-3">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="bi bi-file-earmark-text"></i>
+        </div>
+        <div>
+          <div class="stat-val text-primary">{{ kpis().totalAdopciones }}</div>
+          <div class="stat-lbl">Solicitudes</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tasa de Aprobación -->
+    <div class="col-sm-6 col-xl-3">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="bi bi-check-circle"></i>
+        </div>
+        <div>
+          <div class="stat-val text-primary">{{ getTasaAdopcion() }}%</div>
+          <div class="stat-lbl">Aprobadas</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Distribuciones y Estados -->
+  <div class="row g-4 mb-4">
+    <!-- Estado de las Mascotas -->
+    <div class="col-lg-6">
+      <div class="card card-pet h-100">
+        <div class="card-body p-4">
+          <h5 class="fw-bold text-dark mb-3">Estado de las Mascotas</h5>
+          <div class="row g-3 text-center mb-4">
+            <div class="col-4">
+              <div class="p-3 bg-light border rounded">
+                <div class="fs-4 fw-bold text-dark">{{ kpis().mascotasDisponibles }}</div>
+                <small class="text-secondary">Disponibles</small>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="p-3 bg-light border rounded">
+                <div class="fs-4 fw-bold text-dark">{{ kpis().mascotasEnAdopcion }}</div>
+                <small class="text-secondary">En Adopción</small>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="p-3 bg-light border rounded">
+                <div class="fs-4 fw-bold text-primary">{{ kpis().mascotasAdoptadas }}</div>
+                <small class="text-secondary">Adoptadas</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Distribución por Especie -->
+          <h6 class="fw-bold small text-muted text-uppercase mb-3">Distribución por Especie</h6>
+          <div class="d-flex flex-column gap-2">
+            <div>
+              <div class="d-flex justify-content-between small mb-1">
+                <span>Perros</span>
+                <span class="fw-bold">{{ kpis().especies.Perro }} ({{ getPorcentajeEspecie(kpis().especies.Perro) }}%)</span>
+              </div>
+              <div class="progress" style="height: 6px;">
+                <div class="progress-bar bg-dark" [style.width.%]="getPorcentajeEspecie(kpis().especies.Perro)"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="d-flex justify-content-between small mb-1">
+                <span>Gatos</span>
+                <span class="fw-bold">{{ kpis().especies.Gato }} ({{ getPorcentajeEspecie(kpis().especies.Gato) }}%)</span>
+              </div>
+              <div class="progress" style="height: 6px;">
+                <div class="progress-bar bg-secondary" [style.width.%]="getPorcentajeEspecie(kpis().especies.Gato)"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="d-flex justify-content-between small mb-1">
+                <span>Aves</span>
+                <span class="fw-bold">{{ kpis().especies.Ave }} ({{ getPorcentajeEspecie(kpis().especies.Ave) }}%)</span>
+              </div>
+              <div class="progress" style="height: 6px;">
+                <div class="progress-bar bg-primary" [style.width.%]="getPorcentajeEspecie(kpis().especies.Ave)"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="d-flex justify-content-between small mb-1">
+                <span>Conejos</span>
+                <span class="fw-bold">{{ kpis().especies.Conejo }} ({{ getPorcentajeEspecie(kpis().especies.Conejo) }}%)</span>
+              </div>
+              <div class="progress" style="height: 6px;">
+                <div class="progress-bar bg-dark bg-opacity-50" [style.width.%]="getPorcentajeEspecie(kpis().especies.Conejo)"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Embudo de Adopciones -->
+    <div class="col-lg-6">
+      <div class="card card-pet h-100">
+        <div class="card-body p-4">
+          <h5 class="fw-bold text-dark mb-3">Estado de las Solicitudes</h5>
+          <div class="row g-3 text-center mb-4">
+            <div class="col-4">
+              <div class="p-3 bg-light border rounded">
+                <div class="fs-4 fw-bold text-dark">{{ kpis().adopcionesPendientes }}</div>
+                <small class="text-secondary">Pendientes</small>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="p-3 bg-light border rounded">
+                <div class="fs-4 fw-bold text-success">{{ kpis().adopcionesAprobadas }}</div>
+                <small class="text-secondary">Aprobadas</small>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="p-3 bg-light border rounded">
+                <div class="fs-4 fw-bold text-muted">{{ kpis().adopcionesRechazadas }}</div>
+                <small class="text-secondary">Rechazadas</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3 bg-light rounded border">
+            <h6 class="fw-bold text-dark mb-2">Protocolo de Evaluación</h6>
+            <ul class="list-unstyled small text-secondary mb-0 d-flex flex-column gap-2">
+              <li><i class="bi bi-check2 text-dark me-2"></i> Verificación domiciliaria de espacio e idoneidad.</li>
+              <li><i class="bi bi-check2 text-dark me-2"></i> Compromiso de esterilización y vacunación al día.</li>
+              <li><i class="bi bi-check2 text-dark me-2"></i> Seguimiento veterinario post-adopción.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resumen de Solicitudes Recientes -->
+  <div class="card card-pet">
+    <div class="card-body p-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold text-dark mb-0">Últimas Solicitudes Registradas</h5>
+        <a routerLink="/adopciones" class="btn btn-outline-secondary btn-sm">
+          Ir a Adopciones &rarr;
+        </a>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-pet align-middle mb-0">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Fecha</th>
+              <th>Solicitante</th>
+              <th>Mascota</th>
+              <th>Vivienda</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (a of adopciones().slice(0, 5); track a.id) {
+              <tr>
+                <td><span class="text-secondary small fw-bold">{{ a.id }}</span></td>
+                <td>{{ a.fechaSolicitud }}</td>
+                <td class="fw-semibold text-dark">{{ a.clienteNombre }}</td>
+                <td>{{ a.mascotaNombre }}</td>
+                <td><span class="text-secondary small">{{ a.tipoVivienda }}</span></td>
+                <td>
+                  <span class="badge badge-pet" [ngClass]="{
+                    'badge-pendiente': a.estado === 'Pendiente',
+                    'badge-aprobada': a.estado === 'Aprobada',
+                    'badge-rechazada': a.estado === 'Rechazada'
+                  }">{{ a.estado }}</span>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="6" class="text-center py-3 text-muted small">No hay solicitudes registradas.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

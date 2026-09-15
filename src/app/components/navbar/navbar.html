@@ -1,0 +1,64 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top border-bottom border-secondary border-opacity-25 py-2" style="background-color: #0f172a !important;">
+  <div class="container">
+    <!-- Brand -->
+    <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-white" routerLink="/inicio">
+      <span class="d-inline-flex align-items-center justify-content-center text-white rounded" style="width: 34px; height: 34px; background-color: #1d4ed8;">
+        <i class="bi bi-paw-fill fs-6"></i>
+      </span>
+      <span class="fs-5 tracking-tight">Pet<span class="text-secondary">Shop</span></span>
+    </a>
+
+    <!-- Mobile toggler -->
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navigation links -->
+    <div class="collapse navbar-collapse" id="navbarMain">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3 gap-lg-1">
+        <li class="nav-item">
+          <a class="nav-link px-3 py-2 rounded text-secondary" routerLink="/inicio" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">
+            Inicio
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link px-3 py-2 rounded text-secondary" routerLink="/nosotros" routerLinkActive="active-link">
+            Nosotros
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link px-3 py-2 rounded text-secondary position-relative" routerLink="/mascotas" routerLinkActive="active-link">
+            Mascotas
+            <span class="badge bg-secondary ms-1" style="font-size: 0.7rem;">{{ kpis().totalMascotas }}</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link px-3 py-2 rounded text-secondary" routerLink="/clientes" routerLinkActive="active-link">
+            Clientes
+            <span class="badge bg-secondary ms-1" style="font-size: 0.7rem;">{{ kpis().totalClientes }}</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link px-3 py-2 rounded text-secondary position-relative" routerLink="/adopciones" routerLinkActive="active-link">
+            Adopciones
+            @if (kpis().adopcionesPendientes > 0) {
+              <span class="badge bg-primary ms-1" style="font-size: 0.7rem;">{{ kpis().adopcionesPendientes }}</span>
+            }
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link px-3 py-2 rounded text-secondary" routerLink="/dashboard" routerLinkActive="active-link">
+            Dashboard
+          </a>
+        </li>
+      </ul>
+
+      <!-- Quick Action CTA -->
+      <div class="d-flex align-items-center">
+        <a routerLink="/adopciones" class="btn btn-sm btn-pet-primary">
+          <i class="bi bi-plus-lg me-1"></i> Nueva Solicitud
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,348 @@
+<div class="container py-4">
+  <!-- Encabezado directo sin etiquetas ni subtítulos detrás -->
+  <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-2 border-bottom">
+    <div>
+      <h2 class="fw-bold text-dark mb-1">Registro de Mascotas</h2>
+      <p class="text-secondary small mb-0">
+        Formulario basado en plantillas (<code>FormsModule</code> y <code>[(ngModel)]</code>) con validación de datos.
+      </p>
+    </div>
+    <div class="mt-2 mt-md-0">
+      <span class="badge bg-light text-secondary border px-3 py-2">
+        Total registradas: <strong>{{ mascotas().length }}</strong>
+      </span>
+    </div>
+  </div>
+
+  <!-- Alerta de confirmación sobria -->
+  @if (mensajeExito) {
+    <div class="alert alert-secondary border-secondary d-flex align-items-center justify-content-between p-3 mb-4 rounded-2" role="alert">
+      <div class="d-flex align-items-center gap-2 text-dark">
+        <i class="bi bi-check2-circle fs-5 text-success"></i>
+        <span>{{ mensajeExito }}</span>
+      </div>
+      <button type="button" class="btn-close btn-sm" (click)="mensajeExito = null" aria-label="Close"></button>
+    </div>
+  }
+
+  <div class="row g-4">
+    <!-- Formulario 01: Template-Driven Form -->
+    <div class="col-lg-5">
+      <div class="card card-pet">
+        <div class="card-header-pet">
+          <h5 class="fw-bold mb-0 text-white">Datos de la Mascota</h5>
+        </div>
+
+        <div class="card-body p-4">
+          <form #mascotaForm="ngForm" (ngSubmit)="onSubmit(mascotaForm)" novalidate>
+            
+            <!-- Campo 1: Nombre (text, min 2) -->
+            <div class="mb-3">
+              <label for="nombre" class="form-label">
+                Nombre de la Mascota <span class="text-danger">*</span>
+              </label>
+              <input
+                type="text"
+                id="nombre"
+                name="nombre"
+                class="form-control"
+                [(ngModel)]="nuevaMascota.nombre"
+                #nombreModel="ngModel"
+                required
+                minlength="2"
+                placeholder="Ej. Max, Luna, Bobby"
+              />
+              @if (nombreModel.invalid && (nombreModel.touched || mascotaForm.submitted)) {
+                <div class="error-feedback">
+                  @if (nombreModel.errors?.['required']) {
+                    <i class="bi bi-exclamation-circle"></i> El nombre de la mascota es obligatorio.
+                  }
+                  @if (nombreModel.errors?.['minlength']) {
+                    <i class="bi bi-exclamation-circle"></i> Ingrese al menos 2 caracteres.
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- Campo 2: Especie (select) -->
+            <div class="mb-3">
+              <label for="especie" class="form-label">
+                Especie <span class="text-danger">*</span>
+              </label>
+              <select
+                id="especie"
+                name="especie"
+                class="form-select"
+                [(ngModel)]="nuevaMascota.especie"
+                #especieModel="ngModel"
+                required
+              >
+                <option value="" disabled selected>Seleccione la especie...</option>
+                @for (esp of especies; track esp) {
+                  <option [value]="esp">{{ esp }}</option>
+                }
+              </select>
+              @if (especieModel.invalid && (especieModel.touched || mascotaForm.submitted)) {
+                <div class="error-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Seleccione una especie de la lista.
+                </div>
+              }
+            </div>
+
+            <!-- Campo 3: Raza (text) -->
+            <div class="mb-3">
+              <label for="raza" class="form-label">
+                Raza <span class="text-danger">*</span>
+              </label>
+              <input
+                type="text"
+                id="raza"
+                name="raza"
+                class="form-control"
+                [(ngModel)]="nuevaMascota.raza"
+                #razaModel="ngModel"
+                required
+                placeholder="Ej. Mestizo, Golden Retriever, Siamés"
+              />
+              @if (razaModel.invalid && (razaModel.touched || mascotaForm.submitted)) {
+                <div class="error-feedback">
+                  <i class="bi bi-exclamation-circle"></i> La raza es obligatoria.
+                </div>
+              }
+            </div>
+
+            <!-- Campo 4: Edad (number, >= 0) -->
+            <div class="mb-3">
+              <label for="edad" class="form-label">
+                Edad (años) <span class="text-danger">*</span>
+              </label>
+              <input
+                type="number"
+                id="edad"
+                name="edad"
+                class="form-control"
+                [(ngModel)]="nuevaMascota.edad"
+                #edadModel="ngModel"
+                required
+                min="0"
+                step="1"
+                placeholder="0, 1, 2..."
+              />
+              @if (edadModel.invalid && (edadModel.touched || mascotaForm.submitted)) {
+                <div class="error-feedback">
+                  @if (edadModel.errors?.['required']) {
+                    <i class="bi bi-exclamation-circle"></i> La edad es obligatoria.
+                  }
+                  @if (edadModel.errors?.['min']) {
+                    <i class="bi bi-exclamation-circle"></i> Debe ser un valor mayor o igual a 0.
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- Campo 5: Sexo (radio) -->
+            <div class="mb-3">
+              <label class="form-label d-block">
+                Sexo <span class="text-danger">*</span>
+              </label>
+              <div class="d-flex gap-4">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="sexo"
+                    id="sexoMacho"
+                    value="Macho"
+                    [(ngModel)]="nuevaMascota.sexo"
+                    #sexoModel="ngModel"
+                    required
+                  />
+                  <label class="form-check-label" for="sexoMacho">Macho</label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="sexo"
+                    id="sexoHembra"
+                    value="Hembra"
+                    [(ngModel)]="nuevaMascota.sexo"
+                    #sexoModel="ngModel"
+                    required
+                  />
+                  <label class="form-check-label" for="sexoHembra">Hembra</label>
+                </div>
+              </div>
+              @if (sexoModel.invalid && (sexoModel.touched || mascotaForm.submitted)) {
+                <div class="error-feedback">
+                  <i class="bi bi-exclamation-circle"></i> Debe indicar el sexo.
+                </div>
+              }
+            </div>
+
+            <!-- Estado de la Mascota -->
+            <div class="mb-3">
+              <label for="estado" class="form-label">Estado</label>
+              <select
+                id="estado"
+                name="estado"
+                class="form-select"
+                [(ngModel)]="nuevaMascota.estado"
+              >
+                <option value="Disponible">Disponible</option>
+                <option value="En adopción">En adopción</option>
+                <option value="Adoptado">Adoptado</option>
+              </select>
+            </div>
+
+            <!-- URL de Imagen (Opcional) -->
+            <div class="mb-3">
+              <label for="imagenUrl" class="form-label">URL de Imagen (Opcional)</label>
+              <input
+                type="url"
+                id="imagenUrl"
+                name="imagenUrl"
+                class="form-control"
+                [(ngModel)]="nuevaMascota.imagenUrl"
+                placeholder="https://ejemplo.com/foto-mascota.jpg"
+              />
+              <small class="text-muted d-block mt-1">Si no se ingresa, se asignará una imagen de muestra según la especie.</small>
+            </div>
+
+            <!-- Observaciones / Descripción -->
+            <div class="mb-4">
+              <label for="descripcion" class="form-label">Descripción</label>
+              <textarea
+                id="descripcion"
+                name="descripcion"
+                rows="2"
+                class="form-control"
+                [(ngModel)]="nuevaMascota.descripcion"
+                placeholder="Rasgos, temperamento o notas adicionales..."
+              ></textarea>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="d-grid gap-2">
+              <button
+                type="submit"
+                class="btn btn-pet-primary"
+                [disabled]="mascotaForm.invalid && mascotaForm.submitted"
+              >
+                Registrar Mascota
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-secondary btn-sm"
+                (click)="mascotaForm.resetForm({ estado: 'Disponible' })"
+              >
+                Limpiar campos
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Catálogo de Mascotas Registradas -->
+    <div class="col-lg-7">
+      <div class="card card-pet h-100">
+        <div class="card-body p-4">
+          <!-- Filtros de búsqueda sobrios -->
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+            <h5 class="fw-bold mb-0 text-dark">Mascotas Registradas</h5>
+            <div>
+              <select class="form-select form-select-sm" [(ngModel)]="filtroEspecie" style="width: auto;">
+                <option value="TODAS">Todas las especies</option>
+                @for (esp of especies; track esp) {
+                  <option [value]="esp">{{ esp }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              placeholder="Buscar por nombre, raza o código..."
+              [(ngModel)]="busqueda"
+            />
+          </div>
+
+          <!-- Tabla de mascotas con foto en miniatura -->
+          <div class="table-responsive">
+            <table class="table table-pet align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>Foto / Código</th>
+                  <th>Mascota</th>
+                  <th>Especie / Raza</th>
+                  <th>Edad / Sexo</th>
+                  <th>Estado</th>
+                  <th class="text-end">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (m of mascotasFiltradas; track m.id) {
+                  <tr>
+                    <td>
+                      <div class="d-flex align-items-center gap-2">
+                        @if (m.imagenUrl) {
+                          <img
+                            [src]="m.imagenUrl"
+                            [alt]="m.nombre"
+                            class="rounded border"
+                            style="width: 38px; height: 38px; object-fit: cover;"
+                          />
+                        }
+                        <span class="text-secondary small fw-bold">{{ m.id }}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="fw-bold text-dark">{{ m.nombre }}</div>
+                      <small class="text-muted">{{ m.fechaRegistro }}</small>
+                    </td>
+                    <td>
+                      <div>{{ m.especie }}</div>
+                      <small class="text-muted">{{ m.raza }}</small>
+                    </td>
+                    <td>
+                      <div>{{ m.edad }} año(s)</div>
+                      <small class="text-muted">{{ m.sexo }}</small>
+                    </td>
+                    <td>
+                      <span class="badge badge-pet" [ngClass]="{
+                        'badge-disponible': m.estado === 'Disponible',
+                        'badge-en-adopcion': m.estado === 'En adopción',
+                        'badge-adoptado': m.estado === 'Adoptado'
+                      }">{{ m.estado }}</span>
+                    </td>
+                    <td class="text-end">
+                      <div class="btn-group btn-group-sm">
+                        @if (m.estado !== 'Disponible') {
+                          <button class="btn btn-outline-secondary btn-sm" (click)="cambiarEstado(m.id, 'Disponible')" title="Marcar Disponible">
+                            <i class="bi bi-arrow-clockwise"></i>
+                          </button>
+                        }
+                        <button class="btn btn-outline-danger btn-sm" (click)="eliminar(m.id, m.nombre)" title="Eliminar mascota">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                } @empty {
+                  <tr>
+                    <td colspan="6" class="text-center py-4 text-muted small">
+                      No se encontraron mascotas registradas.
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
