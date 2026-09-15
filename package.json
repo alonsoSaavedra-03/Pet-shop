@@ -24,6 +24,7 @@
     "@angular/build": "^22.1.8",
     "@angular/cli": "^22.1.8",
     "@angular/compiler-cli": "^22.1.0",
+    "adm-zip": "^0.6.1",
     "docx": "^9.7.1",
     "jsdom": "^28.0.0",
     "prettier": "^3.8.1",
